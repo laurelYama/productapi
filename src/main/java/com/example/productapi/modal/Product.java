@@ -4,21 +4,26 @@ import jakarta.persistence.*;
 
 @Entity
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
+
     private String name;
+
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
+
     private double price;
 
+    // Getters and Setters
     public Long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(Long id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
@@ -27,6 +32,14 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
     }
 
     public double getPrice() {
