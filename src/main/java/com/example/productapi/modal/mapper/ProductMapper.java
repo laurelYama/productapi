@@ -10,7 +10,7 @@ public class ProductMapper {
     public Product getrequest(ProductRequestDTO productRequestDTO){
         Product product = new Product();
         product.setName(productRequestDTO.getNom());
-        product.setPrice(product.getPrice());
+        product.setPrice(productRequestDTO.getPrix());
         return product;
     }
 

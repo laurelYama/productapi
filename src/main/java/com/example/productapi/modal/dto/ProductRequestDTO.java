@@ -2,9 +2,9 @@ package com.example.productapi.modal.dto;
 
 public class ProductRequestDTO {
     private String nom;
-    private String prix;
+    private double prix;
 
-    public ProductRequestDTO(String prix, String nom) {
+    public ProductRequestDTO(double prix, String nom) {
         this.prix = prix;
         this.nom = nom;
     }
@@ -17,11 +17,11 @@ public class ProductRequestDTO {
         this.nom = nom;
     }
 
-    public String getPrix() {
+    public double getPrix() {
         return prix;
     }
 
-    public void setPrix(String prix) {
+    public void setPrix(double prix) {
         this.prix = prix;
     }
 
