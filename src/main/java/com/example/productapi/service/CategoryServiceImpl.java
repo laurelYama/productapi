@@ -1,10 +1,14 @@
 package com.example.productapi.service;
 
+import com.example.productapi.exceptions.ProductNotExistException;
 import com.example.productapi.modal.Category;
+import com.example.productapi.modal.Product;
 import com.example.productapi.modal.dto.CategoryRequestDTO;
 import com.example.productapi.modal.dto.CategoryResponseDTO;
+import com.example.productapi.modal.dto.ProductResponseDTO;
 import com.example.productapi.modal.mapper.CategoryMapper;
 import com.example.productapi.repository.CategoryRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Data
 public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
@@ -57,5 +62,13 @@ public class CategoryServiceImpl implements CategoryService {
             throw new RuntimeException("Catégorie non trouvée avec ID : " + id);
         }
         categoryRepository.deleteById(id);
+    }
+
+    public CategoryResponseDTO categoryResponseDTO(String name) {
+        Category category =  categoryRepository.findByName(name);
+        if (category == null) {
+            throw  new ProductNotExistException("PRODUCT NOT FOUND","1000","Le product "+name+" n'existe pas ");
+        }
+        return productMapper.getresponse(category);
     }
 }

@@ -1,5 +1,7 @@
 package com.example.productapi.service;
 
+import com.example.productapi.exceptions.ProductNotExistException;
+import com.example.productapi.modal.Category;
 import com.example.productapi.modal.Product;
 import com.example.productapi.modal.dto.ProductRequestDTO;
 import com.example.productapi.modal.dto.ProductResponseDTO;
@@ -11,12 +13,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductMapper productMapper;
+    @Autowired
+    private CategoryServiceImpl categoryServiceImpl;
 
     @Autowired
     private ProductRepository productRepository;
@@ -45,19 +50,21 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO) {
 
-        Product product = productMapper.getrequest(productRequestDTO);
+        Category category= categoryServiceImpl.getCategoryRepository().findByName(productRequestDTO.getNomCategorie());
+        Product product = productMapper.getrequest(productRequestDTO,category);
         Product productToSave = productRepository.save(product);
         return productMapper.getresponse(productToSave);
     }
 
     @Override
     public ProductResponseDTO updateProduct(Long id, ProductRequestDTO productRequestDTO) {
+        Category category= categoryServiceImpl.getCategoryRepository().findByName(productRequestDTO.getNomCategorie());
         // Vérifie si le produit existe
 
         if (!productRepository.existsById(id)) {
             return null; // Ou lever une exception personnalisée
         }
-        Product product = productMapper.getrequest(productRequestDTO);
+        Product product = productMapper.getrequest(productRequestDTO,category);
         Product productUpdate = productRepository.save(product);
 
         return productMapper.getresponse(productUpdate);
@@ -91,5 +98,12 @@ public class ProductServiceImpl implements ProductService {
 
         return new PageImpl<>(pages, pageRequest, pages.size());
     }
-
+    @Override
+    public ProductResponseDTO getProductByName(String name) {
+        Product products =  productRepository.findByName(name);
+        if (products == null) {
+            throw  new ProductNotExistException("PRODUCT NOT FOUND","1000","Le product "+name+" n'existe pas ");
+        }
+        return productMapper.getresponse(products);
+    }
 }

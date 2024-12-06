@@ -22,7 +22,7 @@ public class ProductController {
     private ProductService productService;
 
     // 1. Obtenir tous les produits (non paginée)
-    @GetMapping
+    @GetMapping("/all")
     public List<ProductResponseDTO> getAllProducts() {
         return productService.getAllProducts();
     }
@@ -35,7 +35,7 @@ public class ProductController {
     }
 
     // 3. Créer un nouveau produit
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<ProductResponseDTO> createProduct(@RequestBody ProductRequestDTO productRequestDTO) {
         ProductResponseDTO createdProduct = productService.createProduct(productRequestDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
@@ -49,7 +49,7 @@ public class ProductController {
     }
 
     // 5. Supprimer un produit
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/findById/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
@@ -59,5 +59,9 @@ public class ProductController {
     @GetMapping("/paginated")
     public Page<ProductResponseDTO> getAllProductsPaginated(@PageableDefault(size = 20) Pageable pageable) {
         return productService.getAllProducts(pageable);
+    }
+    @GetMapping("/findByName/{name}")
+    public ProductResponseDTO getProductByName(@PathVariable String name) {
+        return productService.getProductByName(name);
     }
 }

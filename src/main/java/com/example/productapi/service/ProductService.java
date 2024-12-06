@@ -27,4 +27,6 @@ public interface ProductService {
 
     // Récupérer tous les produits avec pagination
     Page<ProductResponseDTO> getAllProducts(Pageable pageable);
+
+    ProductResponseDTO getProductByName(String name);
 }
